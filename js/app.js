@@ -3,6 +3,7 @@
 
   const movies = [];
 
+
   const renderMovies = function() {
     $('#listings').empty();
 
@@ -56,5 +57,44 @@
     }
   };
 
-  // ADD YOUR CODE HERE
+// This is using the submit button inside the form div
+$('form').submit(function(event){  // listener
+  event.preventDefault()  // this keeps the submit at bey
+});
+
+function movie(id, poster, title, year){
+  this.id = id;
+  this.poster = poster;
+  this.title = title;
+  this.year = year;
+}
+// This uses the button, creates the function
+$('button').on('click', function (){
+  let $input = $('#search')[0].value; // input set, checking value
+  if ($('#search')[0].value === ""){  // loop to verify if value is blank
+      alert("Please enter a valid movie") // reminds to put in value
+  }
+$('#search')[0].value = "";  // clears value after submission
+
+
+// this is the get request for the site and appended input
+  var $xhr= $.getJSON("https://omdb-api.now.sh/?s=" + $input);
+  $xhr.done(function(data){  // .done is the promise
+
+
+    for (var i = 0; i < data.Search.length; i++){  // loop to add to object
+        let poster = data.Search[i].Poster;
+        let id = data.Search[i].imdbID;
+        let title = data.Search[i].Title;
+        let year = data.Search[i].year;
+        let movobj = new movie(id, poster, title, year);
+        movies.push(movobj);
+        // pushes objects to movie array
+    }
+  movie = [];
+  renderMovies(movie);  //
+
+  });
+});
+
 })();
